@@ -12,6 +12,7 @@ public class CamController : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        transform.position = new Vector3(0, 5, 0);
     }
 
     // Update is called once per frame

@@ -21,11 +21,6 @@ public class TerrainGenerator : MonoBehaviour
         updateMesh();
     }
 
-    void Update()
-    {
-        updateMesh();
-    }
-
     void createMeshVertices(){
 
         for(int z = 0; z <= zSize; z++){
