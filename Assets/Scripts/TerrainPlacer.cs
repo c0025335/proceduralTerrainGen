@@ -17,9 +17,16 @@ public class TerrainPlacer : MonoBehaviour
 
         Vector3 newPos = transform.position;
         newPos.y = 0;
+        
         newPos -= new Vector3(xSize/2, 0, 0);
-
         placeTerrain(newPos);
+        
+        newPos -= new Vector3(xSize, 0, 0);
+        placeTerrain(newPos);
+        
+        newPos += new Vector3(xSize*2, 0, 0);
+        placeTerrain(newPos);
+
     }
 
     void placeTerrain(Vector3 terrainPos){
