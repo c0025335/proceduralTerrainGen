@@ -5,12 +5,13 @@ using UnityEngine;
 public class TerrainGenerator : MonoBehaviour
 {   
     public Mesh mesh;
+    public BoxCollider AABB;
     public int xSize = 10;
     public int zSize = 10;
     public List<Vector3> verticesList;
     public List<int> trianglePointList;
-    public float PerlinNoiseOffsetX = 0.3f;
-    public float PerlinNoiseOffsetZ = 0.3f;
+    public float PerlinNoiseZoomX = 0.3f;
+    public float PerlinNoiseZoomZ = 0.3f;
     public float PerlinNoiseScale = 2f;
     public bool wireMesh = true;
     public List<Vector3> verticesDebuggingList;
@@ -18,6 +19,11 @@ public class TerrainGenerator : MonoBehaviour
     void Start()
     {
         mesh = GetComponent<MeshFilter>().mesh;
+        AABB = GetComponent<BoxCollider>();
+        
+        AABB.size = new Vector3(xSize, 2, zSize);
+        AABB.center = new Vector3((float)xSize/2, 1, (float)zSize/2);
+        
         updateMesh();
     }
 
@@ -25,7 +31,7 @@ public class TerrainGenerator : MonoBehaviour
 
         for(int z = 0; z <= zSize; z++){
             for(int x = 0; x <= xSize; x++){
-                float y = Mathf.PerlinNoise((transform.position.x + x) * PerlinNoiseOffsetX, (transform.position.z + z) * PerlinNoiseOffsetZ) * PerlinNoiseScale;
+                float y = Mathf.PerlinNoise((transform.position.x + x) * PerlinNoiseZoomX, (transform.position.z + z) * PerlinNoiseZoomZ) * PerlinNoiseScale;
                 verticesList.Add(new Vector3(x, y, z));
                 verticesDebuggingList.Add(new Vector3((transform.position.x + x), y, (transform.position.z + z)));
             }

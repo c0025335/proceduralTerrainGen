@@ -4,7 +4,34 @@ using UnityEngine;
 
 public class NotVisableDestroy : MonoBehaviour
 {
-    void OnBecameInvisible(){
-        Destroy(gameObject);
+
+    Camera cam;
+    Plane[] planes;
+    Collider terrainCollider;
+    public MeshRenderer terrainRender;
+
+    void Start()
+    {
+        cam = Camera.main;
+        terrainCollider =  GetComponent<Collider>();
+        terrainRender = GetComponent<MeshRenderer>();
+    }
+
+    void Update()
+    {
+        planes = GeometryUtility.CalculateFrustumPlanes(cam);
+        if(GeometryUtility.TestPlanesAABB(planes, terrainCollider.bounds)){
+            inCameraFrustrum();
+        } else {
+            notInCameraFrustrum();
+        }
+    }
+
+    void inCameraFrustrum(){
+        terrainRender.enabled = true;
+    }
+
+    void notInCameraFrustrum(){
+        terrainRender.enabled = false;
     }
 }
