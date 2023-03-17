@@ -29,9 +29,11 @@ public class NotVisableDestroy : MonoBehaviour
 
     void inCameraFrustrum(){
         terrainRender.enabled = true;
+        gameObject.tag = "visableTerrain";
     }
 
     void notInCameraFrustrum(){
         terrainRender.enabled = false;
+        gameObject.tag = "notVisableTerrain";
     }
 }
