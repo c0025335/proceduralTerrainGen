@@ -9,10 +9,20 @@ public class GridTracker : MonoBehaviour
     
     [SerializeField] public int maxAmountActiveGrids = 10;
     [SerializeField] public int maxAmountNonActiveGrids = 10;
+    [SerializeField] public GameObject grid;
+    public TerrainGenerator gridVars;
 
     void Start()
     {
         findTerrainGrids();
+        
+        if(grid.GetComponent<TerrainGenerator>() == null){
+            Debug.Log("Not applicable gameObject.");
+            UnityEditor.EditorApplication.isPlaying = false;
+            Application.Quit();
+        }
+
+        gridVars = grid.GetComponent<TerrainGenerator>();
     }
 
     void Update()
@@ -22,6 +32,17 @@ public class GridTracker : MonoBehaviour
         if(nonActiveGrids.Count >= maxAmountNonActiveGrids) {
             removeOldGrids();
         }
+
+        Debug.Log(activeGrids.Count);
+        if(activeGrids.Count == 0 && nonActiveGrids.Count == 0){
+
+            Vector3 startGridPos = Camera.main.transform.position;
+            startGridPos.y = 0f;
+            startGridPos -= new Vector3((float)gridVars.xSize/2, 0, (float)gridVars.zSize/2);
+
+            placeGrid(startGridPos);
+        }
+
     }
 
     void findTerrainGrids(){
@@ -88,5 +109,10 @@ public class GridTracker : MonoBehaviour
 
         }
 
+    }
+
+    void placeGrid(Vector3 gridPos){
+        Instantiate(grid, gridPos, Quaternion.identity);
+        Debug.Log("Placed Grid");
     }
 }
