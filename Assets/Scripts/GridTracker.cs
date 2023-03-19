@@ -14,6 +14,7 @@ public class GridTracker : MonoBehaviour
 
     void Start()
     {
+
         findTerrainGrids();
         
         if(grid.GetComponent<TerrainGenerator>() == null){
@@ -23,6 +24,16 @@ public class GridTracker : MonoBehaviour
         }
 
         gridVars = grid.GetComponent<TerrainGenerator>();
+
+        if(activeGrids.Count <= 0){
+
+            Vector3 startGridPos = Camera.main.transform.position;
+            startGridPos.y = 0f;
+            startGridPos -= new Vector3((float)gridVars.xSize/2, 0, (float)gridVars.zSize/2);
+
+            placeGrid(startGridPos);
+        }
+
     }
 
     void Update()
@@ -33,13 +44,15 @@ public class GridTracker : MonoBehaviour
             removeOldGrids();
         }
 
-        if(activeGrids.Count == 0 && nonActiveGrids.Count == 0){
+        //Main Problem this fires twice???
+        if(activeGrids.Count > 0 && activeGrids.Count < maxAmountActiveGrids){
 
-            Vector3 startGridPos = Camera.main.transform.position;
-            startGridPos.y = 0f;
-            startGridPos -= new Vector3((float)gridVars.xSize/2, 0, (float)gridVars.zSize/2);
+            acsendingDistanceToCam(activeGrids);
+            
+            Vector3 nextGridPos = activeGrids[activeGrids.Count-1].transform.position;
+            nextGridPos.z += (float)gridVars.zSize;
 
-            placeGrid(startGridPos);
+            placeGrid(nextGridPos);
         }
 
     }
@@ -116,6 +129,13 @@ public class GridTracker : MonoBehaviour
         
         if(gridColliders.Length <= 0){
             Instantiate(grid, gridPos, Quaternion.identity);
+            Debug.Log("Placed");
+        } else {
+            Debug.Log("Pos of Detected: " + gridColliders[0].transform.position);
+            Debug.Log("Pos of Attempted: " + gridPos);
         }
+
+        findTerrainGrids();
+
     }
 }
