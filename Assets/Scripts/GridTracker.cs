@@ -33,7 +33,6 @@ public class GridTracker : MonoBehaviour
             removeOldGrids();
         }
 
-        Debug.Log(activeGrids.Count);
         if(activeGrids.Count == 0 && nonActiveGrids.Count == 0){
 
             Vector3 startGridPos = Camera.main.transform.position;
@@ -112,7 +111,11 @@ public class GridTracker : MonoBehaviour
     }
 
     void placeGrid(Vector3 gridPos){
-        Instantiate(grid, gridPos, Quaternion.identity);
-        Debug.Log("Placed Grid");
+
+        Collider[] gridColliders = Physics.OverlapSphere(gridPos, 0.1f);
+        
+        if(gridColliders.Length <= 0){
+            Instantiate(grid, gridPos, Quaternion.identity);
+        }
     }
 }
