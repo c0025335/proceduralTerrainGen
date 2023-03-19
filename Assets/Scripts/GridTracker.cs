@@ -45,6 +45,7 @@ public class GridTracker : MonoBehaviour
         }
 
         //Main Problem this fires twice???
+        //Solution - spawned in grid isn't tagged immediatly
         if(activeGrids.Count > 0 && activeGrids.Count < maxAmountActiveGrids){
 
             acsendingDistanceToCam(activeGrids);
@@ -129,13 +130,15 @@ public class GridTracker : MonoBehaviour
         
         if(gridColliders.Length <= 0){
             Instantiate(grid, gridPos, Quaternion.identity);
-            Debug.Log("Placed");
+            Debug.Log("Placed at: " + gridPos);
         } else {
             Debug.Log("Pos of Detected: " + gridColliders[0].transform.position);
             Debug.Log("Pos of Attempted: " + gridPos);
         }
 
+        Debug.Log("Active Grids: " + activeGrids.Count);
         findTerrainGrids();
+        Debug.Log("Active Grids: " + activeGrids.Count);
 
     }
 }
