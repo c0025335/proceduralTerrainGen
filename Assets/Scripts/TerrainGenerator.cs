@@ -21,9 +21,8 @@ public class TerrainGenerator : MonoBehaviour
         mesh = GetComponent<MeshFilter>().mesh;
         AABB = GetComponent<BoxCollider>();
         
-        //Temp fix so it won't be detected when placing next grid next to it
-        AABB.size = new Vector3(xSize - 1, 2, zSize - 1);
-        AABB.center = new Vector3((float)xSize/2 - 1, 1, (float)zSize/2 - 1);
+        AABB.size = new Vector3(xSize, 2, zSize);
+        AABB.center = new Vector3((float)xSize/2, 1, (float)zSize/2);
         
         updateMesh();
     }

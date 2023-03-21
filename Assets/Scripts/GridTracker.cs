@@ -44,16 +44,34 @@ public class GridTracker : MonoBehaviour
             removeOldGrids();
         }
 
-        //Main Problem this fires twice???
-        //Solution - spawned in grid isn't tagged immediatly
         if(activeGrids.Count > 0 && activeGrids.Count < maxAmountActiveGrids){
 
             acsendingDistanceToCam(activeGrids);
             
-            Vector3 nextGridPos = activeGrids[activeGrids.Count-1].transform.position;
-            nextGridPos.z += (float)gridVars.zSize;
+            //Straight Line from camera
+            Vector3 nextGridPos = activeGrids[0].transform.position;
+            for(int i = activeGrids.Count; i < maxAmountActiveGrids; i++){
+                nextGridPos += (Camera.main.transform.forward.normalized) * gridVars.xSize;
+                nextGridPos.y = 0f;
+                placeGrid(nextGridPos);
+            }
+            
+        }
 
-            placeGrid(nextGridPos);
+        Collider[] gridColliders = Physics.OverlapSphere(Camera.main.transform.position, 12.5f);
+        if(gridColliders.Length <= 0){
+            
+            if(activeGrids.Count >= 10){
+                acsendingDistanceToCam(activeGrids);
+                GameObject gridToDestory = activeGrids[activeGrids.Count-1];
+                activeGrids.RemoveAt(activeGrids.Count-1);
+                Destroy(gridToDestory.gameObject);
+            }
+
+            Vector3 undernethCam = Camera.main.transform.position;
+            undernethCam.y = 0f;
+            placeGrid(undernethCam);
+            
         }
 
     }
@@ -128,17 +146,17 @@ public class GridTracker : MonoBehaviour
 
         Collider[] gridColliders = Physics.OverlapSphere(gridPos, 0.1f);
         
-        if(gridColliders.Length <= 0){
-            Instantiate(grid, gridPos, Quaternion.identity);
+        //Another Temp/Permant Fix
+        if(gridColliders.Length <= 1){
+            GameObject newGrid = Instantiate(grid, gridPos, Quaternion.identity);
+            newGrid.tag = "visableTerrain";
             Debug.Log("Placed at: " + gridPos);
         } else {
             Debug.Log("Pos of Detected: " + gridColliders[0].transform.position);
             Debug.Log("Pos of Attempted: " + gridPos);
         }
 
-        Debug.Log("Active Grids: " + activeGrids.Count);
         findTerrainGrids();
-        Debug.Log("Active Grids: " + activeGrids.Count);
 
     }
 }
