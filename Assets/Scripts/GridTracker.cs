@@ -6,9 +6,10 @@ public class GridTracker : MonoBehaviour
 {
     public List<GameObject> activeGrids;
     public List<GameObject> nonActiveGrids;
-    
-    [SerializeField] public int maxAmountActiveGrids = 10;
-    [SerializeField] public int maxAmountNonActiveGrids = 10;
+    public List<GameObject> newlyGeneratedGrids;
+
+    [SerializeField] public int maxAmountNewlyGeneratedGrids = 10;
+    [SerializeField] public int maxAmountNonActiveGrids = 100;
     [SerializeField] public GameObject grid;
     public TerrainGenerator gridVars;
 
@@ -29,7 +30,6 @@ public class GridTracker : MonoBehaviour
 
             Vector3 startGridPos = Camera.main.transform.position;
             startGridPos.y = 0f;
-            startGridPos -= new Vector3((float)gridVars.xSize/2, 0, (float)gridVars.zSize/2);
 
             placeGrid(startGridPos);
         }
@@ -44,6 +44,8 @@ public class GridTracker : MonoBehaviour
             removeOldGrids();
         }
 
+        /*
+        Need to change heavily now, after centering mesh to being on the gameObject's center
         if(activeGrids.Count > 0 && activeGrids.Count < maxAmountActiveGrids){
 
             acsendingDistanceToCam(activeGrids);
@@ -73,6 +75,7 @@ public class GridTracker : MonoBehaviour
             placeGrid(undernethCam);
             
         }
+        */
 
     }
 
@@ -80,6 +83,7 @@ public class GridTracker : MonoBehaviour
 
         activeGrids.Clear();
         nonActiveGrids.Clear();
+        newlyGeneratedGrids.Clear();
 
         GameObject[] visableGrids = GameObject.FindGameObjectsWithTag("visableTerrain");
         if(visableGrids.Length > 0){
@@ -92,6 +96,13 @@ public class GridTracker : MonoBehaviour
         if(notVisableGrids.Length > 0){
             foreach(GameObject grid in notVisableGrids){
                 nonActiveGrids.Add(grid);
+            }
+        }
+
+        GameObject[] newGrids = GameObject.FindGameObjectsWithTag("newlyGeneratedTerrain");
+        if(newGrids.Length > 0){
+            foreach(GameObject grid in newGrids){
+                newlyGeneratedGrids.Add(grid);
             }
         }
     }
@@ -146,10 +157,10 @@ public class GridTracker : MonoBehaviour
 
         Collider[] gridColliders = Physics.OverlapSphere(gridPos, 0.1f);
         
-        //Another Temp/Permant Fix
+        //Needs to be redone
         if(gridColliders.Length <= 1){
             GameObject newGrid = Instantiate(grid, gridPos, Quaternion.identity);
-            newGrid.tag = "visableTerrain";
+            newGrid.tag = "newlyGeneratedTerrain";
             Debug.Log("Placed at: " + gridPos);
         } else {
             Debug.Log("Pos of Detected: " + gridColliders[0].transform.position);

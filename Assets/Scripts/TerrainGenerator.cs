@@ -22,18 +22,21 @@ public class TerrainGenerator : MonoBehaviour
         AABB = GetComponent<BoxCollider>();
         
         AABB.size = new Vector3(xSize, 2, zSize);
-        AABB.center = new Vector3((float)xSize/2, 1, (float)zSize/2);
+        AABB.center = new Vector3(0, 1, 0);
         
         updateMesh();
     }
 
     void createMeshVertices(){
 
+        Vector3 meshOffsetPos = transform.position;
+        meshOffsetPos -= new Vector3((float)xSize/2, 0, (float)zSize/2);
+
         for(int z = 0; z <= zSize; z++){
             for(int x = 0; x <= xSize; x++){
-                float y = Mathf.PerlinNoise((transform.position.x + x) * PerlinNoiseZoomX, (transform.position.z + z) * PerlinNoiseZoomZ) * PerlinNoiseScale;
-                verticesList.Add(new Vector3(x, y, z));
-                verticesDebuggingList.Add(new Vector3((transform.position.x + x), y, (transform.position.z + z)));
+                float y = Mathf.PerlinNoise((meshOffsetPos.x + x) * PerlinNoiseZoomX, (meshOffsetPos.z + z) * PerlinNoiseZoomZ) * PerlinNoiseScale;
+                verticesList.Add(new Vector3((float)(x - xSize/2), y, (float)(z - zSize/2)));
+                verticesDebuggingList.Add(new Vector3((meshOffsetPos.x + x), y, (meshOffsetPos.z + z)));
             }
         }
 
@@ -74,7 +77,7 @@ public class TerrainGenerator : MonoBehaviour
     private void OnDrawGizmos(){
         
         if(verticesDebuggingList == null || wireMesh == false) return;
-        for (int i = 0; i < verticesList.Count; i++) Gizmos.DrawSphere(verticesDebuggingList.ToArray()[i], 0.05f);
+        for (int i = 0; i < verticesDebuggingList.Count; i++) Gizmos.DrawSphere(verticesDebuggingList.ToArray()[i], 0.05f);
         Gizmos.color = Color.black;
         Gizmos.DrawWireMesh(mesh, transform.position);
 
