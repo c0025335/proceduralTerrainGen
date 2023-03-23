@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mesh: {fileID: 0}
+  AABB: {fileID: 0}
   xSize: 25
   zSize: 25
   verticesList: []
@@ -120,7 +121,6 @@ MonoBehaviour:
   PerlinNoiseZoomZ: 0.3
   PerlinNoiseScale: 2
   wireMesh: 0
-  verticesDebuggingList: []
 --- !u!114 &-3621526482871958803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,3 +133,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95ae6512f412c064d9e270ff0e17b5b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  terrainRender: {fileID: 0}

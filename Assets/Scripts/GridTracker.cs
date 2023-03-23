@@ -44,6 +44,18 @@ public class GridTracker : MonoBehaviour
             removeOldGrids();
         }
 
+        if(newlyGeneratedGrids.Count < maxAmountNewlyGeneratedGrids){
+
+            acsendingDistanceToCam(activeGrids);
+
+            List<Vector3> gridPosToSpawn = findNextEmptyPos();
+            if(gridPosToSpawn != null){
+                foreach(Vector3 pos in gridPosToSpawn){
+                    placeGrid(pos);
+                }
+            }
+        }
+
         /*
         Need to change heavily now, after centering mesh to being on the gameObject's center
         if(activeGrids.Count > 0 && activeGrids.Count < maxAmountActiveGrids){
@@ -155,19 +167,87 @@ public class GridTracker : MonoBehaviour
 
     void placeGrid(Vector3 gridPos){
 
-        Collider[] gridColliders = Physics.OverlapSphere(gridPos, 0.1f);
+        Collider[] gridColliders = Physics.OverlapSphere(gridPos, (gridVars.xSize/2 - 0.1f));
         
-        //Needs to be redone
-        if(gridColliders.Length <= 1){
+        if(gridColliders.Length <= 0){
             GameObject newGrid = Instantiate(grid, gridPos, Quaternion.identity);
             newGrid.tag = "newlyGeneratedTerrain";
-            Debug.Log("Placed at: " + gridPos);
         } else {
+            Debug.Log("Failed");
             Debug.Log("Pos of Detected: " + gridColliders[0].transform.position);
             Debug.Log("Pos of Attempted: " + gridPos);
         }
 
         findTerrainGrids();
 
+    }
+
+    public List<Vector3> findNextEmptyPos(){
+
+        List<Vector3> gridPosToSpawn = new List<Vector3>();
+        bool unableToGenerateLeft = false;
+        bool unableToGenerateRight = false;
+
+        if(activeGrids.Count > 0){
+
+            Vector3 posToCheck = activeGrids[activeGrids.Count-1].transform.position;
+            Debug.Log("Active Grid: " + posToCheck);
+
+            while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateLeft == false){
+                
+                posToCheck -= Camera.main.transform.right * gridVars.xSize;
+
+                Vector3 viewpos = Camera.main.WorldToViewportPoint(posToCheck);
+                bool inCameraFrustrum = (viewpos.x > 0 && viewpos.x < 1) && (viewpos.y > 0 && viewpos.y < 1);
+                bool inFrontOfCamera = viewpos.z > 0;
+                
+                if (inCameraFrustrum && inFrontOfCamera){
+                    
+                    Debug.Log("Area in Camera: " + posToCheck);
+
+                    Collider[] existingGrids = Physics.OverlapSphere(posToCheck, (gridVars.xSize/2 - 0.1f));
+                    if(!gridPosToSpawn.Contains(posToCheck)){
+                        gridPosToSpawn.Add(posToCheck);
+                        Debug.Log("Need to be made: " + posToCheck);
+                    }
+
+                } else {
+                    Debug.Log("Left point not in camera");
+                    unableToGenerateLeft = true;
+                }
+            }
+
+            posToCheck = activeGrids[activeGrids.Count-1].transform.position;
+
+            while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateRight == false){
+                
+                posToCheck += Camera.main.transform.right * gridVars.xSize;
+
+                Vector3 viewpos = Camera.main.WorldToViewportPoint(posToCheck);
+                bool inCameraFrustrum = (viewpos.x > 0 && viewpos.x < 1) && (viewpos.y > 0 && viewpos.y < 1);
+                bool inFrontOfCamera = viewpos.z > 0;
+                
+                if (inCameraFrustrum && inFrontOfCamera){
+                    
+                    Debug.Log("Area in Camera: " + posToCheck);
+
+                    Collider[] existingGrids = Physics.OverlapSphere(posToCheck, (gridVars.xSize/2 - 0.1f));
+                    if(!gridPosToSpawn.Contains(posToCheck)){
+                        gridPosToSpawn.Add(posToCheck);
+                        Debug.Log("Need to be made: " + posToCheck);
+                    }
+
+                } else {
+                    Debug.Log("Right point not in camera");
+                    unableToGenerateRight = true;
+                }
+            }
+
+            return gridPosToSpawn;
+            //Check Right side
+            //Move Forward
+        }
+        
+        return null;
     }
 }

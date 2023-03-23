@@ -14,7 +14,6 @@ public class TerrainGenerator : MonoBehaviour
     public float PerlinNoiseZoomZ = 0.3f;
     public float PerlinNoiseScale = 2f;
     public bool wireMesh = true;
-    public List<Vector3> verticesDebuggingList;
 
     void Start()
     {
@@ -36,7 +35,6 @@ public class TerrainGenerator : MonoBehaviour
             for(int x = 0; x <= xSize; x++){
                 float y = Mathf.PerlinNoise((meshOffsetPos.x + x) * PerlinNoiseZoomX, (meshOffsetPos.z + z) * PerlinNoiseZoomZ) * PerlinNoiseScale;
                 verticesList.Add(new Vector3((float)(x - xSize/2), y, (float)(z - zSize/2)));
-                verticesDebuggingList.Add(new Vector3((meshOffsetPos.x + x), y, (meshOffsetPos.z + z)));
             }
         }
 
@@ -62,7 +60,6 @@ public class TerrainGenerator : MonoBehaviour
     {
         verticesList.Clear();
         trianglePointList.Clear();
-        verticesDebuggingList.Clear();
         mesh.Clear();
 
         createMeshVertices();
@@ -76,8 +73,8 @@ public class TerrainGenerator : MonoBehaviour
 
     private void OnDrawGizmos(){
         
-        if(verticesDebuggingList == null || wireMesh == false) return;
-        for (int i = 0; i < verticesDebuggingList.Count; i++) Gizmos.DrawSphere(verticesDebuggingList.ToArray()[i], 0.05f);
+        if(verticesList == null || wireMesh == false) return;
+        for (int i = 0; i < verticesList.Count; i++) Gizmos.DrawSphere(verticesList.ToArray()[i], 0.05f);
         Gizmos.color = Color.black;
         Gizmos.DrawWireMesh(mesh, transform.position);
 
