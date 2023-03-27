@@ -191,28 +191,16 @@ public class GridTracker : MonoBehaviour
         if(activeGrids.Count > 0){
 
             Vector3 posToCheck = activeGrids[activeGrids.Count-1].transform.position;
-            Debug.Log("Active Grid: " + posToCheck);
-
             while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateLeft == false){
                 
                 posToCheck -= Camera.main.transform.right * gridVars.xSize;
+                posToCheck.y = 0f;
 
-                Vector3 viewpos = Camera.main.WorldToViewportPoint(posToCheck);
-                bool inCameraFrustrum = (viewpos.x > 0 && viewpos.x < 1) && (viewpos.y > 0 && viewpos.y < 1);
-                bool inFrontOfCamera = viewpos.z > 0;
-                
-                if (inCameraFrustrum && inFrontOfCamera){
-                    
-                    Debug.Log("Area in Camera: " + posToCheck);
+                if (posInCameraFrustrum(posToCheck)){
 
-                    Collider[] existingGrids = Physics.OverlapSphere(posToCheck, (gridVars.xSize/2 - 0.1f));
-                    if(!gridPosToSpawn.Contains(posToCheck)){
-                        gridPosToSpawn.Add(posToCheck);
-                        Debug.Log("Need to be made: " + posToCheck);
-                    }
+                    existingGridsInPos(posToCheck, gridPosToSpawn);
 
                 } else {
-                    Debug.Log("Left point not in camera");
                     unableToGenerateLeft = true;
                 }
             }
@@ -222,32 +210,39 @@ public class GridTracker : MonoBehaviour
             while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateRight == false){
                 
                 posToCheck += Camera.main.transform.right * gridVars.xSize;
-
-                Vector3 viewpos = Camera.main.WorldToViewportPoint(posToCheck);
-                bool inCameraFrustrum = (viewpos.x > 0 && viewpos.x < 1) && (viewpos.y > 0 && viewpos.y < 1);
-                bool inFrontOfCamera = viewpos.z > 0;
+                posToCheck.y = 0f;
                 
-                if (inCameraFrustrum && inFrontOfCamera){
+                if (posInCameraFrustrum(posToCheck)){
                     
-                    Debug.Log("Area in Camera: " + posToCheck);
-
-                    Collider[] existingGrids = Physics.OverlapSphere(posToCheck, (gridVars.xSize/2 - 0.1f));
-                    if(!gridPosToSpawn.Contains(posToCheck)){
-                        gridPosToSpawn.Add(posToCheck);
-                        Debug.Log("Need to be made: " + posToCheck);
-                    }
+                    existingGridsInPos(posToCheck, gridPosToSpawn);
 
                 } else {
-                    Debug.Log("Right point not in camera");
                     unableToGenerateRight = true;
                 }
             }
 
             return gridPosToSpawn;
-            //Check Right side
             //Move Forward
         }
         
         return null;
+    }
+
+    public bool posInCameraFrustrum(Vector3 pos){
+
+        Vector3 viewpos = Camera.main.WorldToViewportPoint(pos);
+        bool inCameraFrustrum = (viewpos.x > 0 && viewpos.x < 1) && (viewpos.y > 0 && viewpos.y < 1);
+        bool inFrontOfCamera = viewpos.z > 0;
+
+        return (inCameraFrustrum && inFrontOfCamera);
+    }
+
+    public void existingGridsInPos(Vector3 pos, List<Vector3>posToCompare){
+        
+        Collider[] existingGrids = Physics.OverlapSphere(pos, (gridVars.xSize/2 - 0.1f));
+        if(!posToCompare.Contains(pos) && existingGrids.Length <= 0){
+            posToCompare.Add(pos);
+        }
+
     }
 }
