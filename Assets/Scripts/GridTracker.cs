@@ -221,8 +221,21 @@ public class GridTracker : MonoBehaviour
                 }
             }
 
+            if(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateLeft && unableToGenerateRight){
+
+                posToCheck = activeGrids[activeGrids.Count-1].transform.position;
+                posToCheck += Camera.main.transform.forward * gridVars.xSize;
+                posToCheck.y = 0f;
+
+                if (posInCameraFrustrum(posToCheck)){
+                    
+                    existingGridsInPos(posToCheck, gridPosToSpawn);
+
+                }
+
+            }
+
             return gridPosToSpawn;
-            //Move Forward
         }
         
         return null;
