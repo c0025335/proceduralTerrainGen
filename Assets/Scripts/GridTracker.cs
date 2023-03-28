@@ -10,6 +10,7 @@ public class GridTracker : MonoBehaviour
 
     [SerializeField] public int maxAmountNewlyGeneratedGrids = 10;
     [SerializeField] public int maxAmountNonActiveGrids = 100;
+    [SerializeField] public int maxAmountActiveGrids = 200;
     [SerializeField] public GameObject grid;
     public TerrainGenerator gridVars;
 
@@ -44,7 +45,7 @@ public class GridTracker : MonoBehaviour
             removeOldGrids();
         }
 
-        if(newlyGeneratedGrids.Count < maxAmountNewlyGeneratedGrids){
+        if(newlyGeneratedGrids.Count < maxAmountNewlyGeneratedGrids && activeGrids.Count < maxAmountActiveGrids){
 
             acsendingDistanceToCam(activeGrids);
 
@@ -55,40 +56,6 @@ public class GridTracker : MonoBehaviour
                 }
             }
         }
-
-        /*
-        Need to change heavily now, after centering mesh to being on the gameObject's center
-        if(activeGrids.Count > 0 && activeGrids.Count < maxAmountActiveGrids){
-
-            acsendingDistanceToCam(activeGrids);
-            
-            //Straight Line from camera
-            Vector3 nextGridPos = activeGrids[0].transform.position;
-            for(int i = activeGrids.Count; i < maxAmountActiveGrids; i++){
-                nextGridPos += (Camera.main.transform.forward.normalized) * gridVars.xSize;
-                nextGridPos.y = 0f;
-                placeGrid(nextGridPos);
-            }
-            
-        }
-
-        Collider[] gridColliders = Physics.OverlapSphere(Camera.main.transform.position, 12.5f);
-        if(gridColliders.Length <= 0){
-            
-            if(activeGrids.Count >= 10){
-                acsendingDistanceToCam(activeGrids);
-                GameObject gridToDestory = activeGrids[activeGrids.Count-1];
-                activeGrids.RemoveAt(activeGrids.Count-1);
-                Destroy(gridToDestory.gameObject);
-            }
-
-            Vector3 undernethCam = Camera.main.transform.position;
-            undernethCam.y = 0f;
-            placeGrid(undernethCam);
-            
-        }
-        */
-
     }
 
     void findTerrainGrids(){
@@ -184,55 +151,60 @@ public class GridTracker : MonoBehaviour
 
     public List<Vector3> findNextEmptyPos(){
 
-        List<Vector3> gridPosToSpawn = new List<Vector3>();
-        bool unableToGenerateLeft = false;
-        bool unableToGenerateRight = false;
-
         if(activeGrids.Count > 0){
 
-            Vector3 posToCheck = activeGrids[activeGrids.Count-1].transform.position;
-            while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateLeft == false){
-                
-                posToCheck -= Camera.main.transform.right * gridVars.xSize;
-                posToCheck.y = 0f;
+            List<Vector3> gridPosToSpawn = new List<Vector3>();
+            bool unableToGenerateLeft = false;
+            bool unableToGenerateRight = false;
+            Vector3 closestGridPos = activeGrids[0].transform.position;
+            Vector3 resetPos = closestGridPos;
+            Vector3 posToCheck = resetPos;
 
-                if (posInCameraFrustrum(posToCheck)){
+            while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids){
 
-                    existingGridsInPos(posToCheck, gridPosToSpawn);
+                while(!unableToGenerateLeft){
+                    posToCheck -= Camera.main.transform.right * gridVars.xSize;
+                    posToCheck.y = 0f;
 
-                } else {
-                    unableToGenerateLeft = true;
-                }
-            }
+                    if (posInCameraFrustrum(posToCheck)){
 
-            posToCheck = activeGrids[activeGrids.Count-1].transform.position;
+                        existingGridsInPos(posToCheck, gridPosToSpawn);
 
-            while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateRight == false){
-                
-                posToCheck += Camera.main.transform.right * gridVars.xSize;
-                posToCheck.y = 0f;
-                
-                if (posInCameraFrustrum(posToCheck)){
-                    
-                    existingGridsInPos(posToCheck, gridPosToSpawn);
-
-                } else {
-                    unableToGenerateRight = true;
-                }
-            }
-
-            if(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids && unableToGenerateLeft && unableToGenerateRight){
-
-                posToCheck = activeGrids[activeGrids.Count-1].transform.position;
-                posToCheck += Camera.main.transform.forward * gridVars.xSize;
-                posToCheck.y = 0f;
-
-                if (posInCameraFrustrum(posToCheck)){
-                    
-                    existingGridsInPos(posToCheck, gridPosToSpawn);
-
+                    } else {
+                        unableToGenerateLeft = true;
+                    }
                 }
 
+                posToCheck = resetPos;
+
+                while(!unableToGenerateRight){
+                    posToCheck += Camera.main.transform.right * gridVars.xSize;
+                    posToCheck.y = 0f;
+
+                    if (posInCameraFrustrum(posToCheck)){
+
+                        existingGridsInPos(posToCheck, gridPosToSpawn);
+
+                    } else {
+                        unableToGenerateRight = true;
+                    }
+                }
+
+                posToCheck = resetPos;
+                
+                if(unableToGenerateLeft && unableToGenerateRight) {
+                    posToCheck += Camera.main.transform.forward * gridVars.xSize;
+                    posToCheck.y = 0f;
+
+                    if (posInCameraFrustrum(posToCheck)){
+
+                        existingGridsInPos(posToCheck, gridPosToSpawn);
+                        unableToGenerateLeft = false;
+                        unableToGenerateRight = false;
+                    }
+
+                    resetPos = posToCheck;
+                }
             }
 
             return gridPosToSpawn;
