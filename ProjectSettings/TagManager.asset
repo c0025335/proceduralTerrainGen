@@ -6,6 +6,7 @@ TagManager:
   tags:
   - visableTerrain
   - notVisableTerrain
+  - newlyGeneratedTerrain
   layers:
   - Default
   - TransparentFX

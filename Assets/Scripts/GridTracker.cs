@@ -164,7 +164,12 @@ public class GridTracker : MonoBehaviour
 
                 while(!unableToGenerateLeft){
                     posToCheck -= Camera.main.transform.right * gridVars.xSize;
+                    
+                    Debug.Log("Left Before: " + posToCheck);
+                    posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
+                    posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
                     posToCheck.y = 0f;
+                    Debug.Log("Left After: " + posToCheck);
 
                     if (posInCameraFrustrum(posToCheck)){
 
@@ -179,7 +184,11 @@ public class GridTracker : MonoBehaviour
 
                 while(!unableToGenerateRight){
                     posToCheck += Camera.main.transform.right * gridVars.xSize;
+                    Debug.Log("Right Before: " + posToCheck);
+                    posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
+                    posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
                     posToCheck.y = 0f;
+                    Debug.Log("Right After: " + posToCheck);
 
                     if (posInCameraFrustrum(posToCheck)){
 
@@ -194,7 +203,11 @@ public class GridTracker : MonoBehaviour
                 
                 if(unableToGenerateLeft && unableToGenerateRight) {
                     posToCheck += Camera.main.transform.forward * gridVars.xSize;
+                    Debug.Log("Forward Before: " + posToCheck);
+                    posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
+                    posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
                     posToCheck.y = 0f;
+                    Debug.Log("Forward After: " + posToCheck);
 
                     if (posInCameraFrustrum(posToCheck)){
 
