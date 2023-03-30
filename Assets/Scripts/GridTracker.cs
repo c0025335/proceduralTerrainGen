@@ -163,19 +163,28 @@ public class GridTracker : MonoBehaviour
             while(gridPosToSpawn.Count < maxAmountNewlyGeneratedGrids){
 
                 while(!unableToGenerateLeft){
+                    
                     posToCheck -= Camera.main.transform.right * gridVars.xSize;
                     
-                    Debug.Log("Left Before: " + posToCheck);
-                    posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
-                    posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
-                    posToCheck.y = 0f;
-                    Debug.Log("Left After: " + posToCheck);
+                    float upperX = (float)Mathf.CeilToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
+                    float upperZ = (float)Mathf.CeilToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
+                    float lowerX = (float)Mathf.FloorToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
+                    float lowerZ = (float)Mathf.FloorToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
 
-                    if (posInCameraFrustrum(posToCheck)){
+                    Vector3[] possiblePosForGridSpawns = new Vector3[4];
+                    possiblePosForGridSpawns[0] = new Vector3(upperX, 0 ,upperZ);
+                    possiblePosForGridSpawns[1] = new Vector3(upperX, 0 ,lowerZ);
+                    possiblePosForGridSpawns[2] = new Vector3(lowerX, 0 ,upperZ);
+                    possiblePosForGridSpawns[3] = new Vector3(lowerX, 0 ,lowerZ);
 
-                        existingGridsInPos(posToCheck, gridPosToSpawn);
-
-                    } else {
+                    int beforeCheck = gridPosToSpawn.Count;
+                    foreach(Vector3 pos in possiblePosForGridSpawns){
+                        if (posInCameraFrustrum(pos)){
+                            existingGridsInPos(pos, gridPosToSpawn);
+                        }
+                    }
+                    
+                    if(beforeCheck >= gridPosToSpawn.Count || gridPosToSpawn.Count >= maxAmountActiveGrids){
                         unableToGenerateLeft = true;
                     }
                 }
@@ -183,18 +192,28 @@ public class GridTracker : MonoBehaviour
                 posToCheck = resetPos;
 
                 while(!unableToGenerateRight){
+                    
                     posToCheck += Camera.main.transform.right * gridVars.xSize;
-                    Debug.Log("Right Before: " + posToCheck);
-                    posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
-                    posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
-                    posToCheck.y = 0f;
-                    Debug.Log("Right After: " + posToCheck);
+                    
+                    float upperX = (float)Mathf.CeilToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
+                    float upperZ = (float)Mathf.CeilToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
+                    float lowerX = (float)Mathf.FloorToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
+                    float lowerZ = (float)Mathf.FloorToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
 
-                    if (posInCameraFrustrum(posToCheck)){
+                    Vector3[] possiblePosForGridSpawns = new Vector3[4];
+                    possiblePosForGridSpawns[0] = new Vector3(upperX, 0 ,upperZ);
+                    possiblePosForGridSpawns[1] = new Vector3(upperX, 0 ,lowerZ);
+                    possiblePosForGridSpawns[2] = new Vector3(lowerX, 0 ,upperZ);
+                    possiblePosForGridSpawns[3] = new Vector3(lowerX, 0 ,lowerZ);
 
-                        existingGridsInPos(posToCheck, gridPosToSpawn);
-
-                    } else {
+                    int beforeCheck = gridPosToSpawn.Count;
+                    foreach(Vector3 pos in possiblePosForGridSpawns){
+                        if (posInCameraFrustrum(pos)){
+                            existingGridsInPos(pos, gridPosToSpawn);
+                        }
+                    }
+                    
+                    if(beforeCheck >= gridPosToSpawn.Count || gridPosToSpawn.Count >= maxAmountActiveGrids){
                         unableToGenerateRight = true;
                     }
                 }
