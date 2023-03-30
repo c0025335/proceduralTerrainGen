@@ -139,10 +139,6 @@ public class GridTracker : MonoBehaviour
         if(gridColliders.Length <= 0){
             GameObject newGrid = Instantiate(grid, gridPos, Quaternion.identity);
             newGrid.tag = "newlyGeneratedTerrain";
-        } else {
-            Debug.Log("Failed");
-            Debug.Log("Pos of Detected: " + gridColliders[0].transform.position);
-            Debug.Log("Pos of Attempted: " + gridPos);
         }
 
         findTerrainGrids();
@@ -165,17 +161,7 @@ public class GridTracker : MonoBehaviour
                 while(!unableToGenerateLeft){
                     
                     posToCheck -= Camera.main.transform.right * gridVars.xSize;
-                    
-                    float upperX = (float)Mathf.CeilToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
-                    float upperZ = (float)Mathf.CeilToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
-                    float lowerX = (float)Mathf.FloorToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
-                    float lowerZ = (float)Mathf.FloorToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
-
-                    Vector3[] possiblePosForGridSpawns = new Vector3[4];
-                    possiblePosForGridSpawns[0] = new Vector3(upperX, 0 ,upperZ);
-                    possiblePosForGridSpawns[1] = new Vector3(upperX, 0 ,lowerZ);
-                    possiblePosForGridSpawns[2] = new Vector3(lowerX, 0 ,upperZ);
-                    possiblePosForGridSpawns[3] = new Vector3(lowerX, 0 ,lowerZ);
+                    Vector3[] possiblePosForGridSpawns = upperAndLowerBoundsGrids(posToCheck);
 
                     int beforeCheck = gridPosToSpawn.Count;
                     foreach(Vector3 pos in possiblePosForGridSpawns){
@@ -194,17 +180,7 @@ public class GridTracker : MonoBehaviour
                 while(!unableToGenerateRight){
                     
                     posToCheck += Camera.main.transform.right * gridVars.xSize;
-                    
-                    float upperX = (float)Mathf.CeilToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
-                    float upperZ = (float)Mathf.CeilToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
-                    float lowerX = (float)Mathf.FloorToInt(posToCheck.x/gridVars.xSize) * gridVars.xSize;
-                    float lowerZ = (float)Mathf.FloorToInt(posToCheck.z/gridVars.zSize) * gridVars.zSize;
-
-                    Vector3[] possiblePosForGridSpawns = new Vector3[4];
-                    possiblePosForGridSpawns[0] = new Vector3(upperX, 0 ,upperZ);
-                    possiblePosForGridSpawns[1] = new Vector3(upperX, 0 ,lowerZ);
-                    possiblePosForGridSpawns[2] = new Vector3(lowerX, 0 ,upperZ);
-                    possiblePosForGridSpawns[3] = new Vector3(lowerX, 0 ,lowerZ);
+                    Vector3[] possiblePosForGridSpawns = upperAndLowerBoundsGrids(posToCheck);
 
                     int beforeCheck = gridPosToSpawn.Count;
                     foreach(Vector3 pos in possiblePosForGridSpawns){
@@ -221,12 +197,12 @@ public class GridTracker : MonoBehaviour
                 posToCheck = resetPos;
                 
                 if(unableToGenerateLeft && unableToGenerateRight) {
+
                     posToCheck += Camera.main.transform.forward * gridVars.xSize;
-                    Debug.Log("Forward Before: " + posToCheck);
+
                     posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
                     posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
                     posToCheck.y = 0f;
-                    Debug.Log("Forward After: " + posToCheck);
 
                     if (posInCameraFrustrum(posToCheck)){
 
@@ -262,4 +238,21 @@ public class GridTracker : MonoBehaviour
         }
 
     }
+
+    public Vector3[] upperAndLowerBoundsGrids(Vector3 pos){
+
+        float upperX = (float)Mathf.CeilToInt(pos.x/gridVars.xSize) * gridVars.xSize;
+        float upperZ = (float)Mathf.CeilToInt(pos.z/gridVars.zSize) * gridVars.zSize;
+        float lowerX = (float)Mathf.FloorToInt(pos.x/gridVars.xSize) * gridVars.xSize;
+        float lowerZ = (float)Mathf.FloorToInt(pos.z/gridVars.zSize) * gridVars.zSize;
+
+        Vector3[] gridBounds = new Vector3[4];
+        gridBounds[0] = new Vector3(upperX, 0 ,upperZ);
+        gridBounds[1] = new Vector3(upperX, 0 ,lowerZ);
+        gridBounds[2] = new Vector3(lowerX, 0 ,upperZ);
+        gridBounds[3] = new Vector3(lowerX, 0 ,lowerZ);
+
+        return gridBounds;
+    }
+
 }
