@@ -796,6 +796,22 @@ MonoBehaviour:
   PerlinNoiseZoomX: 0.1
   PerlinNoiseZoomZ: 0.1
   PerlinNoiseScale: 5
+  mat: {fileID: 0}
+  keyColours:
+  - {r: 0.10346207, g: 0.70056254, b: 0.8773585, a: 0}
+  - {r: 0.7735849, g: 0.7327468, b: 0.29556784, a: 0}
+  - {r: 0.4811321, g: 0.27294993, b: 0.12028302, a: 0}
+  - {r: 0.31684533, g: 0.6886792, b: 0.15917587, a: 0}
+  colourHeights:
+  - 0
+  - 0.25
+  - 0.3
+  - 0.45
+  colourBlends:
+  - 0
+  - 0.051
+  - 0.051
+  - 0.125
   wireMesh: 0
 --- !u!114 &-3621526482871958803
 MonoBehaviour:

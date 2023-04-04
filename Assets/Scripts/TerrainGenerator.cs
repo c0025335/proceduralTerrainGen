@@ -13,24 +13,29 @@ public class TerrainGenerator : MonoBehaviour
     public float PerlinNoiseZoomX = 0.3f;
     public float PerlinNoiseZoomZ = 0.3f;
     public float PerlinNoiseScale = 2f;
+    public Material mat;
+    public Color[] keyColours = new Color[4];
+    [Range(0f, 1f)] public float[] colourHeights = new float[4];
+    [Range(0f, 1f)] public float[] colourBlends = new float[4];
     public bool wireMesh = true;
 
     void Start()
     {
         mesh = GetComponent<MeshFilter>().mesh;
         AABB = GetComponent<BoxCollider>();
-        Material mat = GetComponent<MeshRenderer>().material;
-        mat.SetFloat("PerlinNoiseScale", PerlinNoiseScale);
+        mat = GetComponent<MeshRenderer>().material;
         
         AABB.size = new Vector3(xSize, PerlinNoiseScale, zSize);
         AABB.center = new Vector3(0, PerlinNoiseScale/2, 0);
         
         updateMesh();
+        materialSettings();
     }
 
     void Update()
     {
         updateMesh();
+        materialSettings();
     }
 
     void createMeshVertices(){
@@ -63,8 +68,8 @@ public class TerrainGenerator : MonoBehaviour
 
     }
 
-    void updateMesh()
-    {
+    void updateMesh(){
+        
         verticesList.Clear();
         trianglePointList.Clear();
         mesh.Clear();
@@ -76,6 +81,13 @@ public class TerrainGenerator : MonoBehaviour
         mesh.triangles = trianglePointList.ToArray();
         mesh.RecalculateNormals();
 
+    }
+
+    void materialSettings(){
+        mat.SetFloat("PerlinNoiseScale", PerlinNoiseScale);
+        mat.SetColorArray("keyColours", keyColours);
+        mat.SetFloatArray("colourHeights", colourHeights);
+        mat.SetFloatArray("colourBlends", colourBlends);
     }
 
     private void OnDrawGizmos(){
