@@ -273,9 +273,9 @@ MonoBehaviour:
   activeGrids: []
   nonActiveGrids: []
   newlyGeneratedGrids: []
-  maxAmountNewlyGeneratedGrids: 10
+  maxAmountNewlyGeneratedGrids: 2
   maxAmountNonActiveGrids: 100
-  maxAmountActiveGrids: 200
+  maxAmountActiveGrids: 50
   grid: {fileID: 716510572465748523, guid: f24ab4c18774ce9419df04cd303e921d, type: 3}
   gridVars: {fileID: 0}
 --- !u!1 &705507993

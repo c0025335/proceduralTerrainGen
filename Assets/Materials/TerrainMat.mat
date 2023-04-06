@@ -59,6 +59,26 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - defaultTexture:
+        m_Texture: {fileID: 2800000, guid: 35410c65013428743a93ed0229f32be2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - dirtTexture:
+        m_Texture: {fileID: 2800000, guid: dc0ad13f6ebc93c42ad748fee8d9214d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - grassTexture:
+        m_Texture: {fileID: 2800000, guid: 980427f9a3d4f0543b0942b2f8ee1410, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - sandTexture:
+        m_Texture: {fileID: 2800000, guid: ffd358f1b65beb94ba727f5448b6026f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - waterTexture:
+        m_Texture: {fileID: 2800000, guid: 5fc1b23fa79792345b59ee3f7b0d6c84, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BumpScale: 1
@@ -77,6 +97,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
+    - defaultScale: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

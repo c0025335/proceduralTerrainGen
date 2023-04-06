@@ -39,7 +39,7 @@ public class GridTracker : MonoBehaviour
 
     void Update()
     {
-        /*findTerrainGrids();
+        findTerrainGrids();
 
         if(nonActiveGrids.Count >= maxAmountNonActiveGrids) {
             removeOldGrids();
@@ -55,7 +55,7 @@ public class GridTracker : MonoBehaviour
                     placeGrid(pos);
                 }
             }
-        }*/
+        }
     }
 
     void findTerrainGrids(){

@@ -14,9 +14,12 @@ public class TerrainGenerator : MonoBehaviour
     public float PerlinNoiseZoomZ = 0.3f;
     public float PerlinNoiseScale = 2f;
     public Material mat;
-    public Color[] keyColours = new Color[4];
-    [Range(0f, 1f)] public float[] colourHeights = new float[4];
-    [Range(0f, 1f)] public float[] colourBlends = new float[4];
+    const int textureSize = 512;
+    const TextureFormat textureFormat = TextureFormat.RGB565;
+    public Texture2D[] textures = new Texture2D[4];
+    [Range(0f, 1f)] public float[] textureStartHeights = new float[4];
+    [Range(0f, 1f)] public float[] textureBlends = new float[4];
+    public float[] textureScales = new float[4];
     public bool wireMesh = true;
 
     void Start()
@@ -28,12 +31,6 @@ public class TerrainGenerator : MonoBehaviour
         AABB.size = new Vector3(xSize, PerlinNoiseScale, zSize);
         AABB.center = new Vector3(0, PerlinNoiseScale/2, 0);
         
-        updateMesh();
-        materialSettings();
-    }
-
-    void Update()
-    {
         updateMesh();
         materialSettings();
     }
@@ -83,11 +80,24 @@ public class TerrainGenerator : MonoBehaviour
 
     }
 
+    Texture2DArray generateTextureArray(Texture2D[] textures2D){
+        Texture2DArray textureArray = new Texture2DArray(textureSize, textureSize, 4, textureFormat, true);
+        for(int i = 0; i < 4; i++){
+            textureArray.SetPixels(textures2D[i].GetPixels(), i);
+        }
+        textureArray.Apply();
+        return textureArray;
+    }
+
     void materialSettings(){
+
         mat.SetFloat("PerlinNoiseScale", PerlinNoiseScale);
-        mat.SetColorArray("keyColours", keyColours);
-        mat.SetFloatArray("colourHeights", colourHeights);
-        mat.SetFloatArray("colourBlends", colourBlends);
+        mat.SetFloatArray("textureBlends", textureBlends);
+        mat.SetFloatArray("textureStartHeights", textureStartHeights);
+        mat.SetFloatArray("textureScales", textureScales);
+
+        Texture2DArray textureArray = generateTextureArray(textures);
+        mat.SetTexture("terrainTextures", textureArray);
     }
 
     private void OnDrawGizmos(){

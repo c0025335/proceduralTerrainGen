@@ -797,21 +797,26 @@ MonoBehaviour:
   PerlinNoiseZoomZ: 0.1
   PerlinNoiseScale: 5
   mat: {fileID: 0}
-  keyColours:
-  - {r: 0.10346207, g: 0.70056254, b: 0.8773585, a: 0}
-  - {r: 0.7735849, g: 0.7327468, b: 0.29556784, a: 0}
-  - {r: 0.4811321, g: 0.27294993, b: 0.12028302, a: 0}
-  - {r: 0.31684533, g: 0.6886792, b: 0.15917587, a: 0}
-  colourHeights:
+  textures:
+  - {fileID: 2800000, guid: 5fc1b23fa79792345b59ee3f7b0d6c84, type: 3}
+  - {fileID: 2800000, guid: ffd358f1b65beb94ba727f5448b6026f, type: 3}
+  - {fileID: 2800000, guid: dc0ad13f6ebc93c42ad748fee8d9214d, type: 3}
+  - {fileID: 2800000, guid: 980427f9a3d4f0543b0942b2f8ee1410, type: 3}
+  textureStartHeights:
   - 0
   - 0.25
-  - 0.3
-  - 0.45
-  colourBlends:
-  - 0
-  - 0.051
-  - 0.051
-  - 0.125
+  - 0.396
+  - 0.44
+  textureBlends:
+  - 1
+  - 0.153
+  - 0.076
+  - 0.188
+  textureScales:
+  - 2
+  - 1
+  - 5
+  - 2
   wireMesh: 0
 --- !u!114 &-3621526482871958803
 MonoBehaviour:
