@@ -20,7 +20,9 @@ public class TerrainGenerator : MonoBehaviour
     [Range(0f, 1f)] public float[] textureStartHeights = new float[4];
     [Range(0f, 1f)] public float[] textureBlends = new float[4];
     public float[] textureScales = new float[4];
-    public bool wireMesh = true;
+    public bool texturesOn = true;
+    public List<Color> coloursList;
+    public Gradient colourGradient;
 
     void Start()
     {
@@ -32,7 +34,13 @@ public class TerrainGenerator : MonoBehaviour
         AABB.center = new Vector3(0, PerlinNoiseScale/2, 0);
         
         updateMesh();
-        materialSettings();
+
+        if(texturesOn){
+            materialSettings();
+        } else {
+            colourSettings();
+        }
+
     }
 
     void createMeshVertices(){
@@ -100,12 +108,16 @@ public class TerrainGenerator : MonoBehaviour
         mat.SetTexture("terrainTextures", textureArray);
     }
 
-    private void OnDrawGizmos(){
+    void colourSettings(){
         
-        if(verticesList == null || wireMesh == false) return;
-        for (int i = 0; i < verticesList.Count; i++) Gizmos.DrawSphere(verticesList.ToArray()[i], 0.05f);
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireMesh(mesh, transform.position);
+        coloursList.Clear();
+        GetComponent<MeshRenderer>().material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
+
+        foreach(Vector3 vertex in verticesList){
+            coloursList.Add(colourGradient.Evaluate(vertex.y/PerlinNoiseScale));
+        }
+
+        mesh.colors = coloursList.ToArray();
 
     }
 }

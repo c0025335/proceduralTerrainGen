@@ -39,6 +39,10 @@ public class GridTracker : MonoBehaviour
 
     void Update()
     {
+        float cameraRotationX = Camera.main.transform.eulerAngles.x % 360;
+
+        if(cameraRotationX >= 30 || cameraRotationX <= -40) return;
+
         findTerrainGrids();
 
         if(nonActiveGrids.Count >= maxAmountNonActiveGrids) {
@@ -54,8 +58,27 @@ public class GridTracker : MonoBehaviour
                 foreach(Vector3 pos in gridPosToSpawn){
                     placeGrid(pos);
                 }
+            
+            } else {
+                
+                float maxDistance = Mathf.Abs(Camera.main.transform.position.y);
+                Vector3 cameraPos = Camera.main.transform.position;
+                Vector3 dir = Vector3.down;
+                RaycastHit ray;
+
+                if(cameraPos.y < 0) dir = Vector3.up;
+
+                if(!(Physics.Raycast(cameraPos, dir, out ray, maxDistance))){
+
+                    cameraPos.y = 0;
+                    foreach(Vector3 pos in upperAndLowerBoundsGrids(cameraPos)){
+                        placeGrid(pos);
+                    }
+                }
+
             }
         }
+
     }
 
     void findTerrainGrids(){

@@ -31,6 +31,19 @@ public class CamController : MonoBehaviour
             transform.position += transform.right * movementSpeed*Time.fixedDeltaTime;
         }
 
-        transform.eulerAngles += new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0) * 720f * sensitivity * Time.fixedDeltaTime;
+        Vector3 cameraRotation = transform.eulerAngles;
+
+        float xAxisRotation = -Input.GetAxis("Mouse Y") * 720f * sensitivity * Time.fixedDeltaTime;
+        float yAxisRotation = Input.GetAxis("Mouse X") * 720f * sensitivity * Time.fixedDeltaTime;
+
+        yAxisRotation += cameraRotation.y;
+        xAxisRotation += cameraRotation.x;
+
+        if(xAxisRotation < 180 && xAxisRotation > 0) xAxisRotation = Mathf.Clamp(xAxisRotation, 0f, 90f);
+        
+        if(xAxisRotation < 360 && xAxisRotation > 180) xAxisRotation = Mathf.Clamp(xAxisRotation, 270f, 360f);
+
+        transform.rotation = Quaternion.Euler(new Vector3(xAxisRotation, yAxisRotation, 0));
+
     }
 }
