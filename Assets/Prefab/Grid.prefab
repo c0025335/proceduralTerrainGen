@@ -817,7 +817,7 @@ MonoBehaviour:
   - 1
   - 5
   - 2
-  texturesOn: 1
+  texturesOn: 0
   coloursList:
   - {r: 0.21556932, g: 0.6226415, b: 0.18503025, a: 1}
   - {r: 0.2544034, g: 0.59235585, b: 0.19424346, a: 1}

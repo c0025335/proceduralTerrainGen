@@ -13,6 +13,7 @@ public class GridTracker : MonoBehaviour
     [SerializeField] public int maxAmountActiveGrids = 200;
     [SerializeField] public GameObject grid;
     public TerrainGenerator gridVars;
+    [SerializeField] public GameObject player;
 
     void Start()
     {
@@ -27,9 +28,11 @@ public class GridTracker : MonoBehaviour
 
         gridVars = grid.GetComponent<TerrainGenerator>();
 
+        if(!player) player = GameObject.Find("Player");
+
         if(activeGrids.Count <= 0){
 
-            Vector3 startGridPos = Camera.main.transform.position;
+            Vector3 startGridPos = player.transform.position;
             startGridPos.y = 0f;
 
             placeGrid(startGridPos);
@@ -39,7 +42,7 @@ public class GridTracker : MonoBehaviour
 
     void Update()
     {
-        float cameraRotationX = Camera.main.transform.eulerAngles.x % 360;
+        float cameraRotationX = player.transform.eulerAngles.x % 360;
 
         if(cameraRotationX >= 30 || cameraRotationX <= -40) return;
 
@@ -61,8 +64,8 @@ public class GridTracker : MonoBehaviour
             
             } else {
                 
-                float maxDistance = Mathf.Abs(Camera.main.transform.position.y);
-                Vector3 cameraPos = Camera.main.transform.position;
+                float maxDistance = Mathf.Abs(player.transform.position.y);
+                Vector3 cameraPos = player.transform.position;
                 Vector3 dir = Vector3.down;
                 RaycastHit ray;
 
@@ -183,7 +186,7 @@ public class GridTracker : MonoBehaviour
 
                 while(!unableToGenerateLeft){
                     
-                    posToCheck -= Camera.main.transform.right * gridVars.xSize;
+                    posToCheck -= player.transform.right * gridVars.xSize;
                     Vector3[] possiblePosForGridSpawns = upperAndLowerBoundsGrids(posToCheck);
 
                     int beforeCheck = gridPosToSpawn.Count;
@@ -202,7 +205,7 @@ public class GridTracker : MonoBehaviour
 
                 while(!unableToGenerateRight){
                     
-                    posToCheck += Camera.main.transform.right * gridVars.xSize;
+                    posToCheck += player.transform.right * gridVars.xSize;
                     Vector3[] possiblePosForGridSpawns = upperAndLowerBoundsGrids(posToCheck);
 
                     int beforeCheck = gridPosToSpawn.Count;
@@ -221,7 +224,7 @@ public class GridTracker : MonoBehaviour
                 
                 if(unableToGenerateLeft && unableToGenerateRight) {
 
-                    posToCheck += Camera.main.transform.forward * gridVars.xSize;
+                    posToCheck += player.transform.forward * gridVars.xSize;
 
                     posToCheck.x = (float)Mathf.RoundToInt(posToCheck.x/gridVars.xSize)*gridVars.xSize;
                     posToCheck.z = (float)Mathf.RoundToInt(posToCheck.z/gridVars.xSize)*gridVars.zSize;
