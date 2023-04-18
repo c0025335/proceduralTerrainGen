@@ -356,9 +356,9 @@ MonoBehaviour:
   activeGrids: []
   nonActiveGrids: []
   newlyGeneratedGrids: []
-  maxAmountNewlyGeneratedGrids: 10
-  maxAmountNonActiveGrids: 500
-  maxAmountActiveGrids: 200
+  maxAmountNewlyGeneratedGrids: 2
+  maxAmountNonActiveGrids: 1250
+  maxAmountActiveGrids: 1250
   grid: {fileID: 716510572465748523, guid: f24ab4c18774ce9419df04cd303e921d, type: 3}
   gridVars: {fileID: 0}
   player: {fileID: 0}
@@ -729,7 +729,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1759965266}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d4eadab821414a342b1f8cb63f0cc45a, type: 3}
   m_Name: 
